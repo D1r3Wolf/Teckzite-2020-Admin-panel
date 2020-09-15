@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+<style>
+#post {width: 300px;}
+</style>
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<center>
+	<h3>About {{ name }}</h3>
+	<br>
+	<section id="editor">{{ desc | safe }}</section>
+	<form method="post" onsubmit="return false" id="formid">
+		<dl>
+			{{ render_field(form.content) }}
+
+			{{ form.csrf_token }}
+		</dl>
+		{{ form.post(class="form-control btn btn-default",id="post", onclick="runFunc()") }}
+		<br>
+		<br>
+	</form>
+	
+</center>
+
+{% endblock %}
+
+{% block html %}
+{{ super() }}
+<script src="https://cdn.ckeditor.com/4.13.1/full/ckeditor.js"></script>
+<script type="text/javascript">
+	(function () {
+		CKEDITOR.replace("editor",{
+			width : 1000,
+			height : 500,
+			toolbarGroups : [
+				{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+				{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+				{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+				{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+				{ name: 'links', groups: [ 'links' ] },
+				{ name: 'insert', groups: [ 'insert' ] },
+				{ name: 'styles', groups: [ 'styles' ] },
+				{ name: 'colors', groups: [ 'colors' ] },
+				{ name: 'tools', groups: [ 'tools' ] }
+			],
+			removeButtons : 'Source,About,Maximize,BGColor,Templates,Cut,Copy,Paste,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,Blockquote,CreateDiv,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Image,Flash,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,Font,FontSize,TextColor,ShowBlocks,JustifyLeft,JustifyCenter,JustifyRight,JustifyBlock,Outdent,Indent,Italic,Format,Subscript,Superscript,NewPage',
+		});
+	})()
+</script>
+<script type="text/javascript">
+	function runFunc(){
+		data = CKEDITOR.instances.editor.getData();
+		$("#formid")[0][0].value = data;
+		$("#formid")[0].submit();
+	}
+</script>
+{% endblock %}
+

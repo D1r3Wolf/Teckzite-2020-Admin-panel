@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-5 ">
+				<h1>Login</h1>
+				<br>
+				<form action="" method="post">
+
+					<h4> 1. Install the <b>Authenticator</b> app in out Mobile</h4>
+					<br>
+					<h4> 2. Scan the below QR Code, Accept the adding request</h4>
+					<br>
+					<center><img src="{{ url_for('TOTP_qrcode') }}"></center>
+					<br>
+					<dl>
+						{{ render_field(form.token) }}
+						{{ render_field(form.password) }}
+
+						{{ form.csrf_token }}
+					</dl>
+					{{ form.submit(class="form-control btn btn-default") }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<h2 style="text-align: center;">Edit event rules &nbsp;<button class="btn add-rule" style="width: 130px; position: relative;">Add new rule &nbsp;<i class="fa fa-plus-square"></i></button> </h2><br>
+<div class="container" style="width: 70%; margin-left: 15%; margin-right: 15%;">
+	<form onsubmit="return false;" method="POST">
+		<table class="table">
+			{% if listEmpty %}
+				<h2 style="text-align: center;"> No rules added yet! </h2>
+			{% else %}
+				{% for row in data %}
+					<tr>
+						<td style="width: 75%;">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-arrow-right"></i></span>
+								<input id="msg" type="text" class="form-control" name="rule_{{ row['id'] }}_{{ row['token'] }}" value="{{ row['rules'] }}" disabled="true">
+							</div>
+						</td>
+						<td style="width: 1%;"></td>
+						<td>
+							<button class="btn edit-rule" onclick="EnableInputField(this);">Edit &nbsp;<i class="fa fa-plus-square"></i></button>
+							<button class="btn fix-rule" onclick="DisableInputField(this);">Confirm <i class="fa fa-check"></i></button>
+							<button class="btn del-rule" onclick="areyousure = confirm('Sure you wanna delete this rule ?!'); if (areyousure) this.parentElement.parentElement.remove();">Delete <i class="fa fa-trash"></i></button>
+						</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+		</table>
+		<center><button type="submit" class="btn submit-btn" onclick="$(':disabled').each(function(e){$(this).removeAttr('disabled');}); document.forms[0].submit();">Submit Rules</button></center>
+	</form>
+</div>
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+.btn { color: white; width: 90px; }
+.btn:hover, .btn:focus { color: white; }
+.submit-btn {width : 120px; background-color: lightgrey; color: black;}
+.submit-btn:hover {background-color: grey}
+/*.edit-rule { background-color: #00dd00; }*/
+.edit-rule { background-color: #00dd00; }
+.edit-rule:hover { background-color: #00bb00; }
+.add-rule { background-color: #00dd00; }
+.add-rule:hover { background-color: #00bb00; }
+.del-rule { background-color: #ff3333; }
+.del-rule:hover { background-color: #e60000; }
+.fix-rule { background-color: #0000ff; }
+.fix-rule:hover { background-color: #0000cc; }
+</style>
+{% endblock %}
+{% block html %}
+{{ super() }}
+<script type="text/javascript">
+	function getInputField(btn) { return btn.parentElement.parentElement.childNodes[1].childNodes[1].childNodes[3]; }
+	function EnableInputField(btn) { let inp = getInputField(btn); inp.disabled = false; }
+	function DisableInputField(btn) { let inp = getInputField(btn); inp.disabled = true; }
+	$('.add-rule').click(function() {
+		newrow = `<tr>
+				<td style="width: 75%;">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-arrow-right"></i></span>
+						<input id="msg" type="text" class="form-control" name="new_rule">
+					</div>
+				</td>
+				<td style="width: 1%;"></td>
+				<td>
+					<button class="btn edit-rule" onclick="EnableInputField(this);">Edit &nbsp;<i class="fa fa-plus-square"></i></button>
+					<button class="btn fix-rule" onclick="DisableInputField(this);">Confirm <i class="fa fa-check"></i></button>
+					<button class="btn del-rule" onclick="areyousure = confirm('Sure you wanna delete this rule ?!'); if (areyousure) this.parentElement.parentElement.remove();">Delete <i class="fa fa-trash"></i></button>
+				</td>
+			</tr>
+		`;
+		$('.table').append(newrow);
+	});
+</script>
+{% endblock %}

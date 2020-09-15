@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4 ">
+				<h3>Add Volunteer</h3>
+				<br>
+				<form action="" method="post">
+					<dl>
+						{{ render_field(form.username) }}
+						{{ render_field(form.password) }}
+						{{ render_field(form.StuName) }}
+						{{ render_field(form.Email) }}
+						{{ render_field(form.Phone) }}
+						{{ render_field(form.StuID) }}
+						{{ render_field(form.setup) }}
+						{{ render_field(form.secret) }}
+						{{ render_field(form.priority) }}
+
+						{{ form.csrf_token }}
+					</dl>
+					{{ form.post(class="form-control btn btn-default") }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

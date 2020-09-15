@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4 ">
+				<h3>OTP verification</h3>
+				<br>
+				<form action="" method="post">
+					<dl>
+						{{ render_field(form.token) }}
+
+						{{ form.csrf_token }}
+					</dl>
+					{{ form.submit(class="form-control btn btn-default") }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

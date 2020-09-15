@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<h1 style="text-align: center;">Events</h1>
+<div class="container" style="width: 80%; margin-left: 10%; margin-right: 10%;">
+{% if listEmpty %}
+	<h2 style="text-align: center;"> No data to display</h2>
+{% else %}
+	<table id="data_table" class="table table-striped table-bordered hover" style="width: 100%;">
+		<thead><tr>
+			{% for col in dataHead %}
+				<td>{{ col }}</td>
+			{% endfor %}
+		</tr></thead>
+			</tr>
+		{% for row, token1, token2 in content_tokens %}
+			<tr {% if row[-1] == 1 %} style="opacity:0.5;"{% endif %}>
+				{% for col in row[1:-1] %}
+					<td style="vertical-align:middle;">{{ col }}</td>
+				{% endfor %}
+				<td style="width: 260px">
+					<button class="btn {% if row[-1] == 0 %}del-btn{% else %}add-btn{% endif %}" id="{{ row[0] }}_{{ token1 }}" title="{% if row[-1] == 0 %}Delete Event{% else %}Add Event{% endif %}" style="width: 165px;">{% if row[-1] == 0 %}Delete{% else %}Add{% endif %} Workshop&nbsp;
+						<i class="fa fa-{% if row[-1] == 0 %}trash{% else %}plus-square{% endif %}"></i>
+					</button>&nbsp;
+					<button class="btn view-btn" onclick="window.open('/head/workshop/{{ row[0] }}/view?token={{ token2 }}', '_blank');" title="View Events" width="100px">View &nbsp;<i class="fa fa-arrow-right"></i></button></td>
+			</tr>
+		{% endfor %}
+	{% endif %}
+	</table>
+</div>
+{% endblock %}
+{% block styles %}
+{{ super() }}
+<style>
+.btn { color: white; padding: 5px 10px; font-size: 16px; cursor: pointer; }
+.btn:hover { color: white; }
+.view-btn { background-color: #0066ff; }
+.view-btn:hover { background-color: #0000ff; }
+.del-btn { background-color: #ff3333; }
+.del-btn:hover { background-color: #e60000; }
+.add-btn { background-color: #00ff00; }
+.add-btn:hover { background-color: #006400; }
+</style>
+{% endblock %}
+{% block html %}
+{{ super() }}
+<script>
+	$(document).ready(function() {
+		$('#data_table').DataTable();
+	});
+	var btn;
+	function sendReq(button, linkLocation) {
+		$('button').prop('disabled', true);
+		button.childNodes[1].setAttribute('class', 'fa fa-refresh fa-spin');
+		button.style.color = 'white';
+		Arr = button.getAttribute('id').split('_');
+		$.ajax({
+			url: "/head/workshop/" + Arr[0] + "/" + linkLocation,
+			method: 'POST',
+			data: 'token=' + Arr[1],
+			success: function(result){
+			$('button').prop('disabled', false);
+			if(result == 'OK') {
+				location.reload();
+			}
+		}});
+	}
+	$(".del-btn").click(function(){
+		btn = this;
+		sendReq(btn, 'delete');
+	});
+	$(".add-btn").click(function(){
+		btn = this;
+		sendReq(btn, 'activate');
+	});
+	$('.view-btn').click(function() {
+		this.style.color = 'white';
+	});
+</script>
+{% endblock %}

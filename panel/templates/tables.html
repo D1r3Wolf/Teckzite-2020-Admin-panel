@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<h1 style="text-align: center;">DataTables</h1>
+<div class="container" style="width: 80%; margin-left: 10%; margin-right: 10%;">
+{% if listEmpty %}
+	<h2 style="text-align: center;"> No data to display</h2>
+{% else %}
+	<table id="data_table" class="table table-striped table-bordered hover" style="width: 100%;">
+		<thead><tr>
+			{% for col in ['ID']+dataHead[2:-1] %}
+				<td>{{ col }}</td>
+			{% endfor %}
+				<td>Options</td>
+		</tr></thead>
+		{% for row, token1, token2 in content_tokens %}
+			<tr {% if row[-1] == 1 %} style="opacity:0.5;"{% endif %}>
+				{% for col in row[2:-1] %}
+					<td style="vertical-align:middle;">{{ col }}</td>
+				{% endfor %}
+				<td><button class="btn {% if row[-1] == 0 %}del-btn{% else %}add-btn{% endif %}" id="{{ row[0] }}_{{ token1 }}" title="{% if row[-1] == 0 %}Delete account{% else %}Add account{% endif %}"><i class="fa fa-{% if row[-1] == 0 %}trash{% else %}plus-square{% endif %}"></i></button>&nbsp;&nbsp;&nbsp;<button class="btn pwd-reset" id="{{ row[1] }}_{{ token2 }}" title="Password reset"><i class="fa fa-gear"></i></button></td>
+			</tr>
+		{% endfor %}
+	{% endif %}
+	</table>
+</div>
+{% endblock %}
+{% block styles %}
+{{ super() }}
+<style>
+.btn { color: white; padding: 5px 10px; font-size: 16px; cursor: pointer; }
+.btn:hover { color: white; }
+.pwd-reset { background-color: #0066ff; }
+.pwd-reset:hover { background-color: #0000ff; }
+.del-btn { background-color: #ff3333; }
+.del-btn:hover { background-color: #e60000; }
+.add-btn { background-color: #00ff00; }
+.add-btn:hover { background-color: #006400; }
+</style>
+{% endblock %}
+{% block html %}
+{{ super() }}
+<script>
+	$(document).ready(function() {
+		$('#data_table').DataTable();
+	});
+	$('.pwd-reset').click(function(){
+		$('button').prop('disabled', true);
+		this.childNodes[0].setAttribute('class', 'fa fa-refresh fa-spin');
+		this.style.color = 'white';
+		Arr = this.getAttribute('id').split('_');
+		$.ajax({
+			url: "/admin/password/" + Arr[0] + "/reset", 
+			method: 'POST',
+			data: 'token=' + Arr[1],
+			success: function(result){
+			$('button').prop('disabled', false);
+			if(result == 'OK') {
+				location.reload();
+			}
+		}});
+	});
+	function sendReq(button, linkLocation){
+		$('button').prop('disabled', true);
+		button.childNodes[0].setAttribute('class', 'fa fa-refresh fa-spin');
+		button.style.color = 'white';
+		Arr = button.getAttribute('id').split('_');
+		$.ajax({
+			url: "/admin/dept/" + Arr[0] + "/" + linkLocation, 
+			method: 'POST',
+			data: 'token=' + Arr[1],
+			success: function(result){
+			$('button').prop('disabled', false);
+			if(result == 'OK') {
+				location.reload();
+			}
+		}});
+	}
+	var button;
+	$(".del-btn").click(function(){
+		btn = this;
+		sendReq(btn, 'delete');
+	});
+	$(".add-btn").click(function(){
+		btn = this
+		sendReq(btn, 'activate');
+	});
+</script>
+{% endblock %}

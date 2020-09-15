@@ -1,0 +1,96 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %} Teckzite 2020 {% endblock %}
+
+{% block styles %}
+{{super()}}
+	<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+	.footer-block {
+		position: fixed;
+		width: 100%;
+		bottom: 0px;
+		text-align: center;
+		background-color: #717171;
+		padding-top: 4px;
+		padding-bottom: 4px;
+		z-index: 10;
+		color: white;
+	}
+	body{
+		z-index: -10;
+	}
+	</style>
+{% endblock %}
+
+{% from "_form-field.html" import render_field %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<div class="navbar-brand" href="#">
+				<img src="/static/images/logo.png" height="23px">
+			</div>
+			<a class="navbar-brand" href="/">
+				{{ nav.mynavbar.MainName }}
+			</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			{% for i in nav.mynavbar.components %}
+				<ul class="nav navbar-nav navbar-{{ i }}">	
+					{% for item in nav.mynavbar.components[i] %}
+		              	{{ item.render() | safe }}
+					{% endfor %}
+				</ul>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-1"></div>
+		<div class="col-sm-12">
+			{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+					{% for category, message in messages %}
+						<div class="alert alert-{{ category }} alert-dismissible" role="alert" style='font-family: "Lucida Console", Monaco, monospace'>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block html %}
+{{ super() }}
+<br><br><br><br>
+<footer class="page-footer font-small blue footer-block">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2019 Copyright:
+    <a href="https://teckzite.org/team.php" style="color: yellow;"> Teckzite Web Team (2020).</a> &nbsp; For any queries : Contact (Ajay - <i class="fa fa-phone"></i> XXXXXXXXXX) or (Akash - <i class="fa fa-phone"></i> XXXXXXXXXX)
+  </div>
+
+  <!-- Copyright -->
+
+</footer>
+
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+	
+</script>
+{% endblock %}

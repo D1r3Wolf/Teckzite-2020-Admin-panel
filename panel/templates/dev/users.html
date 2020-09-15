@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<h1 style="text-align: center;">Events</h1>
+<div class="container" style="width: 80%; margin-left: 10%; margin-right: 10%;">
+{% if listEmpty %}
+	<h2 style="text-align: center;"> No data to display</h2>
+{% else %}
+	<table id="data_table" class="table table-striped table-bordered hover" style="width: 100%;">
+		<thead><tr>
+			{% for col in dataHead %}
+				<td>{{ col }}</td>
+			{% endfor %}
+		</tr></thead>
+			</tr>
+		{% for row, totp, reset, edit in content_tokens %}
+			<tr>
+				{% for col in row[1:-1] %}
+					<td style="vertical-align:middle;">{{ col }}</td>
+				{% endfor %}
+				<td style="width: 20px;">
+					<button class="btn {% if row[-1] == 1 %}del-btn{% else %}add-btn{% endif %}" id="{{ row[0] }}_{{ totp }}" title="{% if row[-1] == 1 %}Remove TOTP{% else %}Add TOTP{% endif %}"><i class="fa fa-{% if row[-1] == 1 %}trash{% else %}plus-square{% endif %}"></i>
+					</button>
+				</td>
+				<td style="width: 20px;">
+					<button class="btn edit-btn" onclick="window.open('/dev/user/{{ row[0] }}/edit?token={{ edit }}', '_blank');" title="Edit User"><i class="fa fa-gear"></i>
+					</button>
+				</td>
+				<td style="width: 20px;">
+					<button class="btn reset-btn" id="{{ row[0] }}_{{ reset }}" title="Password reset"><i class="fa fa-refresh"></i></button>
+				</td>
+			</tr>
+		{% endfor %}
+	{% endif %}
+	</table>
+</div>
+{% endblock %}
+{% block styles %}
+{{ super() }}
+<style>
+.btn { color: white; padding: 5px 10px; font-size: 16px; cursor: pointer; }
+.btn:hover { color: white; }
+
+.add-btn { background-color: #00bb00; }
+.add-btn:hover { background-color: #007700; }
+.del-btn { background-color: #ff3333; }
+.del-btn:hover { background-color: #e60000; }
+.edit-btn { background-color: #0044ff; }
+.edit-btn:hover { background-color: #000077; }
+.reset-btn { background-color: #ff3333; }
+.reset-btn:hover { background-color: #e60000; }
+.check-btn {background-color: #00bb00}
+</style>
+{% endblock %}
+{% block html %}
+{{ super() }}
+<script>
+	$(document).ready(function() {
+		$('#data_table').DataTable();
+	});
+	$(".add-btn").prop('disabled', true);
+	var btn;
+	$('.reset-btn').click(function(){
+		$('button').prop('disabled', true);
+		btn = this;
+		this.childNodes[0].setAttribute('class', 'fa fa-refresh fa-spin');
+		this.style.color = 'white';
+		this.style.backgroundColor = 'green';
+		Arr = this.getAttribute('id').split('_');
+		$.ajax({
+			url: "/dev/user/" + Arr[0] + "/password/reset", 
+			method: 'POST',
+			data: 'token=' + Arr[1],
+			success: function(result){
+				$('button').prop('disabled', false);
+				$(".add-btn").prop('disabled', true);
+				if(result == 'OK') {
+					btn.childNodes[0].setAttribute('class', 'fa fa-check');
+					btn.setAttribute("class",'btn check-btn');
+					alert("Password reset link sent!...");
+				}
+			}
+		});
+	});
+	$('.add-btn').click(function(){
+		$('button').prop('disabled', true);
+		this.childNodes[0].setAttribute('class', 'fa fa-refresh fa-spin');
+		this.style.color = 'white';
+		Arr = this.getAttribute('id').split('_');
+		$.ajax({
+			url: "/dev/user/" + Arr[0] + "/totp/enable", 
+			method: 'POST',
+			data: 'token=' + Arr[1],
+			success: function(result){
+				location.reload();
+			}
+		});
+	});
+	$('.del-btn').click(function(){
+		$('button').prop('disabled', true);
+		this.childNodes[0].setAttribute('class', 'fa fa-refresh fa-spin');
+		this.style.color = 'white';
+		Arr = this.getAttribute('id').split('_');
+		$.ajax({
+			url: "/dev/user/" + Arr[0] + "/totp/disable", 
+			method: 'POST',
+			data: 'token=' + Arr[1],
+			success: function(result){
+				location.reload();
+			}
+		});
+	});
+
+</script>
+{% endblock %}

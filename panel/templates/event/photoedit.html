@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="/static/css/cropper.min.css">
+<link rel="stylesheet" href="/static/css/main.css">
+<style>
+.btn-group > .btn-primary {
+	width: 50px;
+}
+</style>
+{% endblock %}
+{% block content %}
+<h2 style="text-align: center;">Image Editor</h2>
+<br>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<center>
+				<div class="img-container" style="min-height: 600px; max-height: 850px; max-width: 1000px;">
+					<img src="/static/images/cropper.jpg" alt="Picture">
+				</div>
+			</center>
+		</div>
+		<div style="display: none; position: absolute;">
+			<div class="docs-data">
+				<div class="input-group input-group-sm">
+					<span class="input-group-prepend"></span>
+					<input type="hidden" class="form-control" id="dataX" placeholder="x">
+				</div>
+				<div class="input-group input-group-sm">
+					<span class="input-group-prepend"></span>
+					<input type="hidden" class="form-control" id="dataY" placeholder="y">
+				</div>
+				<div class="input-group input-group-sm">
+					<span class="input-group-prepend"></span>
+					<input type="hidden" class="form-control" id="dataWidth" placeholder="width">
+				</div>
+				<div class="input-group input-group-sm">
+					<span class="input-group-prepend"></span>
+					<input type="hidden" class="form-control" id="dataHeight" placeholder="height">
+				</div>
+				<div class="input-group input-group-sm">
+					<span class="input-group-prepend"></span>
+					<input type="hidden" class="form-control" id="dataRotate" placeholder="rotate">
+				</div>
+				<div class="input-group input-group-sm">
+					<span class="input-group-prepend"></span>
+					<input type="hidden" class="form-control" id="dataScaleX" placeholder="scaleX">
+				</div>
+				<div class="input-group input-group-sm">
+					<span class="input-group-prepend"></span>
+					<input type="hidden" class="form-control" id="dataScaleY" placeholder="scaleY">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" id="actions">
+		<center>
+			<div class="col-md-10 docs-buttons">
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary" data-method="zoom" data-option="0.1" title="Zoom In">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Zoom In">
+							<span class="fa fa-search-plus"></span>
+						</span>
+					</button>
+					<button type="button" class="btn btn-primary" data-method="zoom" data-option="-0.1" title="Zoom Out">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Zoom Out">
+							<span class="fa fa-search-minus"></span>
+						</span>
+					</button>
+				</div>
+
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary" data-method="move" data-option="-10" data-second-option="0" title="Move Left">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Move Left">
+							<span class="fa fa-arrow-left"></span>
+						</span>
+					</button>
+					<button type="button" class="btn btn-primary" data-method="move" data-option="10" data-second-option="0" title="Move Right">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Move Right">
+							<span class="fa fa-arrow-right"></span>
+						</span>
+					</button>
+					<button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="-10" title="Move Up">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Move Up">
+							<span class="fa fa-arrow-up"></span>
+						</span>
+					</button>
+					<button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="10" title="Move Down">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Move Down">
+							<span class="fa fa-arrow-down"></span>
+						</span>
+					</button>
+				</div>
+
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary" data-method="rotate" data-option="-30" title="Rotate Left">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Rotate Left">
+							<span class="fa fa-rotate-left"></span>
+						</span>
+					</button>
+					<button type="button" class="btn btn-primary" data-method="rotate" data-option="30" title="Rotate Right">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Rotate Right">
+							<span class="fa fa-rotate-right"></span>
+						</span>
+					</button>
+				</div>
+
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary" data-method="reset" title="Reset">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Reset">
+							<span class="fa fa-refresh"></span>
+						</span>
+					</button>
+					<label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file">
+						<input type="file" class="sr-only" id="inputImage" name="file" accept="image/*">
+						<span class="docs-tooltip" data-toggle="tooltip" title="Upload Image">
+							<span class="fa fa-upload"></span>
+						</span>
+					</label>
+				</div>
+
+				<div class="btn-group btn-group-crop">
+					<button type="button" class="btn btn-success" data-method="getCroppedCanvas" data-option="{ &quot;width&quot;: 300, &quot;height&quot;: 300 }">
+						<span class="docs-tooltip" data-toggle="tooltip"> Crop & Submit </span>
+					</button>
+				</div>
+
+				<div class="col-md-3 docs-toggles">
+					<!-- <h3>Toggles:</h3> -->
+					<div class="btn-group d-flex flex-nowrap" data-toggle="buttons" style="display: none;">
+						<label class="btn btn-primary active">
+							<input type="radio" class="sr-only" id="aspectRatio1" name="aspectRatio" value="1">
+						</label>
+					</div>
+
+					<div class="btn-group d-flex flex-nowrap" data-toggle="buttons" style="display: none;">
+						<label class="btn btn-primary active">
+							<input type="radio" class="sr-only" id="viewMode0" name="viewMode" value="0" checked>
+						</label>
+					</div>
+				</div>
+		</center>
+
+		<div class="modal fade docs-cropped" id="getCroppedCanvasModal" role="dialog" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="getCroppedCanvasTitle">Cropped</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button class="btn btn-primary" id="download" href="javascript:void(0);" onclick="submitPic(this)" download="/static/images/cropper.jpg">Submit <i class="fa fa-refresh"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		</center>
+	</div>
+</div>
+
+{% endblock %}
+{% block html %}
+{{ super() }}
+<script src="/static/js/cropper.min.js"></script>
+<script src="/static/js/main.js"></script>
+<script type="text/javascript">
+	function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+      var blob = new Blob(byteArrays, {type: contentType});
+      return blob;
+	}
+	function submitPic(element) {
+		element.childNodes[1].setAttribute("class", "fa fa-refresh fa-spin");
+		$('button').prop('disabled', true);
+		$('body').css('opacity', 0.5);
+		var block = element.href.split(";");
+		var contentType = block[0].split(":")[1];
+		var realData = block[1].split(",")[1];
+		var blob = b64toBlob(realData, contentType);
+		var formDataToUpload = new FormData();
+		formDataToUpload.append("image", blob);
+		$.ajax({
+		    url:"/event/edit/photo",
+		    data: formDataToUpload,
+		    type:"POST",
+		    contentType:false,
+		    processData:false,
+		    cache:false,
+		    error:function(err){
+		        alert("Error occured!");
+		    },
+		    success:function(data){
+		        alert("Image uploaded successfully!...");
+		        window.location = "/";
+		    },
+		    complete:function(){
+		        $('button').prop('disabled', false);
+				$('body').css('opacity', 1);
+		    }
+		});
+	}
+
+</script>
+{% endblock %}

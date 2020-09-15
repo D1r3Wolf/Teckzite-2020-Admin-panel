@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-5 ">
+				<h1>Change mail</h1>
+				<br>
+				<form action="" method="post">
+
+						{{ render_field(form.email) }}
+						{{ render_field(form.password) }}
+
+						{{ form.csrf_token }}
+					</dl>
+					<br>
+					{{ form.submit(class="form-control btn btn-default") }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

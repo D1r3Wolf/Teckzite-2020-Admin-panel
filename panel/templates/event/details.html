@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-8 ">
+				<h3>Post Notification</h3>
+				<br>
+				<form action="" method="post">
+					<dl>
+						{{ render_field(nform.title) }}
+						{{ render_field(nform.content) }}
+
+						{{ nform.csrf_token }}
+					</dl>
+					{{ nform.post(class="form-control btn btn-default") }}
+				</form>
+				<br>
+				<h3>Event Updates & Notifications</h3>
+				{% for notif in notifications %}
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-info">
+							{{ notif['post_time'] }} :: <b>{{ notif['title'] }}</b>
+							<button class="btn btn-danger pull-right delete-action" style="height: 22px;padding-top: 1px;" id="notification_{{ notif['id'] }}_{{ notif['delete_token'] }}">
+							Delete&nbsp;&nbsp;<i class="fa fa-trash"></i>
+						</button>
+						</li>
+						<li class="list-group-item">{{ notif['content'] }}</li>
+					</ul>
+				{% endfor %}
+
+			</div>
+			<div class="col-sm-4 ">
+				<h3>Event Team Size</h3>
+				{% if tsize[0] == -1 and tsize[1] == -1 %}
+					<br>
+					<form action="" method="post">
+						<dl>
+							{{ render_field(tform.min_num) }}
+							{{ render_field(tform.max_num) }}
+
+							{{ tform.csrf_token }}
+						</dl>
+						<p style='font-family: "Lucida Console", Monaco; color: red;'><b>It is only edited once !..</b>&nbsp;&nbsp; So Make sure to give correct values</p>
+						{{ tform.setup(class="form-control btn btn-default") }}
+					</form>
+				{% else %}
+					<ul style='font-family: "Lucida Console", Monaco, monospace;'>
+					<li>Minimum : {{ tsize[0] }}</li>
+					<li>Maximum : {{ tsize[1] }}</li>
+					</ul>
+				{% endif %}
+
+				<hr style="border-top: 2px dotted black;">
+
+				<h3>Add Contact Details</h3>
+				<br>
+				<form action="" method="post">
+					<dl>
+						{{ render_field(cform.name) }}
+						{{ render_field(cform.phone) }}
+						{{ render_field(cform.email) }}
+
+						{{ cform.csrf_token }}
+					</dl>
+					{{ cform.add(class="form-control btn btn-default") }}
+				</form>
+				<br>
+				<h3>Event Contact Details</h3>
+				{% for contact in contacts %}
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-info">
+							{{ contact['name'] }}
+							<button class="btn btn-danger pull-right delete-action" style="height: 22px;padding-top: 1px;" id="contact_{{ contact['id'] }}_{{ contact['delete_token'] }}">
+							Delete&nbsp;&nbsp;<i class="fa fa-trash"></i>
+							</button>
+						</li>
+						<li class="list-group-item">{{ contact['phone'] }}</li>
+						<li class="list-group-item">{{ contact['email'] }}</li>
+					</ul>
+				{% endfor %}
+
+			</div>
+		</div>
+	</div>
+
+
+
+{% endblock %}
+
+{% block html %}
+{{ super() }}
+<script>
+	var btn;
+	$(".delete-action").click(function(){
+		btn = this;
+		$('button').prop('disabled', true);
+		this.childNodes[1].setAttribute('class', 'fa fa-refresh fa-spin');
+		Arr = this.getAttribute('id').split('_');
+		$.ajax({
+			url: "/event/delete/" + Arr[0] + "/" + Arr[1], 
+			method: 'POST',
+			data: 'token=' + Arr[2],
+			success: function(result){
+			$('button').prop('disabled', false);
+			btn.childNodes[1].setAttribute('class','fa fa-trash');
+			if(result == 'OK') {
+				location.reload();
+			}
+		}});
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block styles %}
+	{{ super() }}
+	<link rel="stylesheet" type="text/css" href="/static/css/nav-tabs.css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="board">
+				<div class="board-inner">
+					<ul class="nav nav-tabs" id="myTab">
+						<div class="liner"></div>
+						<li class="active">
+							<a href="#about" data-toggle="tab" title="about">
+								<span class="round-tabs one">
+									<i class="fa fa-info"></i>
+									<!-- <p>home</p> -->
+								</span> 
+							</a>
+						</li>
+						<li>
+							<a href="#rules" data-toggle="tab" title="topics">
+								<span class="round-tabs two">
+									<i class="fa fa-check-square-o"></i>
+								</span> 
+							</a>
+						</li>
+						<li>
+							<a href="#time" data-toggle="tab" title="rules">
+								<span class="round-tabs three">
+									<i class="fa fa-gavel"></i>
+								</span> 
+							</a>
+						</li>
+						<li>
+							<a href="#register" data-toggle="tab" title="registration">
+								<span class="round-tabs four">
+									<i class="fa fa-user-plus"></i>
+								</span> 
+							</a>
+						</li>
+						<li>
+							<a href="#notify" data-toggle="tab" title="updates">
+								<span class="round-tabs five">
+									<i class="fa fa-bell"></i>
+								</span> 
+							</a>
+						</li>
+						<li>
+							<a href="#contact" data-toggle="tab" title="contact">
+								<span class="round-tabs six">
+									<i class="fa fa-phone"></i>
+								</span> 
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="tab-content">
+					<div class="tab-pane fade in active" id="about">
+						<h3 class="head text-center">About the Event</h3>
+						<div class="narrow" style="width: 80%;margin-right: auto; margin-left: auto;">
+							{{ about | safe }}
+						</div>
+					</div>
+					<div class="tab-pane fade" id="rules">
+						<h3 class="head text-center">Topics</h3>
+						<div class="narrow" style="width: 80%;margin-right: auto; margin-left: auto;font-size: 20px;">
+							{{ topics | safe }}
+						</div>
+					</div>
+					<div class="tab-pane fade" id="time">
+						<h3 class="head text-center">Rules & Regulations</h3>
+						<div class="narrow" style="width: 80%;margin-right: auto; margin-left: auto;font-size: 20px;">
+							<ul>
+							{% for rule in rules %}
+								<li style="padding-bottom: 10px;">{{ rule['rules'] }}</li>
+							{% endfor %}
+							</ul>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="register">
+						<h3 class="head text-center">Register</h3>
+						<div class="narrow" style="width: 80%;margin-right: auto; margin-left: auto;font-size: 20px;">
+							Registration will be opened soon !...
+						</div>
+					</div>
+					<div class="tab-pane fade" id="notify">
+						<h3 class="head text-center">Updates & Notifications</h3>
+						<div class="narrow" style="width: 80%;margin-right: auto; margin-left: auto;font-size: 20px;">
+							{% for notif in notifications %}
+								<ul class="list-group">
+									<li class="list-group-item list-group-item-info">
+										{{ notif['post_time'] }} :: <b>{{ notif['title'] }}</b>
+									</button>
+									</li>
+									<li class="list-group-item">{{ notif['content'] }}</li>
+								</ul>
+							{% endfor %}
+						</div>
+					</div>
+					<div class="tab-pane fade" id="contact">
+						<h3 class="head text-center">Contacts</h3>
+						<div class="narrow" style="width: 80%;margin-right: auto; margin-left: auto;font-size: 20px;">
+							{% for contact in contacts %}
+								<ul class="list-group">
+									<li class="list-group-item list-group-item-info">
+										{{ contact['name'] }}
+									</li>
+									<li class="list-group-item">{{ contact['phone'] }}</li>
+									<li class="list-group-item">{{ contact['email'] }}</li>
+								</ul>
+							{% endfor %}
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>                   
+{% endblock %}

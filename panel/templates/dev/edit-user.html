@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4 ">
+				<h3>Login</h3>
+				<br>
+				<form action="" method="post">
+					<dl>
+						{{ render_field(form.username, row['username']) }}
+						{{ render_field(form.password) }}
+						{{ render_field(form.StuName,row['name']) }}
+						{{ render_field(form.Email, row['mail']) }}
+						{{ render_field(form.Phone,row['phone']) }}
+						{{ render_field(form.StuID,row['collegeid'])  }}
+						{{ render_field(form.setup, row['totp_setup']+1) }}
+						{{ render_field(form.secret, row['totp_secret']) }}
+						{{ render_field(form.priority, row['priority']) }}
+
+						{{ form.csrf_token }}
+					</dl>
+					{{ form.post(class="form-control btn btn-default") }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

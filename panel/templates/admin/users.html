@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<h1 style="text-align: center;">Departments</h1>
+<div class="container" style="width: 80%; margin-left: 10%; margin-right: 10%;">
+{% if listEmpty %}
+	<h2 style="text-align: center;"> No data to display</h2>
+{% else %}
+	<table id="data_table" class="table table-striped table-bordered hover" style="width: 100%;">
+		<thead><tr>
+			{% for col in dataHead %}
+				<td>{{ col }}</td>
+			{% endfor %}
+		</tr></thead>
+		{% for row in content %}
+			<tr>
+				{% for col in row %}
+					<td style="vertical-align:middle;">{{ col }}</td>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+	{% endif %}
+	</table>
+</div>
+{% endblock %}
+{% block html %}
+{{ super() }}
+<script>
+	$(document).ready(function() {
+		$('#data_table').DataTable();
+	});
+</script>
+{% endblock %}

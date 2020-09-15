@@ -1,0 +1,11 @@
+flask
+python-dotenv
+flask-wtf
+flask-nav
+flask_bootstrap
+flask_csp
+onetimepass
+pyqrcode
+pymysql
+pyopenssl
+gunicorn
