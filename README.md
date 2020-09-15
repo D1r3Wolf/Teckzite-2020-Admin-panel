@@ -1,13 +1,14 @@
 # Teckzite admin panel
 Web site used as Admin panel in Teckzite 2020 (Feb 13-15).
-**Teckzite** : A national level tech fest conducted by [SDCAC](https://intranet.rguktn.ac.in/sdcac/) in [RGUKT Nuzvid](https://rguktn.ac.in/).
 
-#Requirements :
+**Teckzite :** A national level tech fest conducted by [SDCAC](https://intranet.rguktn.ac.in/sdcac/) in [RGUKT Nuzvid](https://rguktn.ac.in/).
+
+## Requirements :
 1. Linux (ubuntu)
 2. Python 3
 3. MySQL
 
-#Setup :
+## Setup :
 1. `pip install -r requirements.txt`
 2. Configure the panel/config.py
 3. Creating Database (tz2020) on mysql
@@ -25,7 +26,7 @@ print(Hash('<password>'))
 7. `./run_server.sh`
 8. `./run_server.sh --temp` for Site under construction message, in case of any edits.
 
-#Notes
+## Notes
 1. After creating the dev account using line 4 in `setup`, Then with that `dev account` ,we create the hierarchy (admin, event org, etc)
 2. `dev account` with priority 0 , have all core functionalities. It is only for web site managers. Others can have admin account.
 
