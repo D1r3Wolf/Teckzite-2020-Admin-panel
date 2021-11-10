@@ -1,4 +1,4 @@
-# Teckzite admin panel
+# Teckzite 2020 admin panel
 Web site used as Admin panel in Teckzite 2020 (Feb 13-15).
 
 **Teckzite :** A national level tech fest conducted by [SDCAC](https://intranet.rguktn.ac.in/sdcac/) in [RGUKT Nuzvid](https://rguktn.ac.in/).
